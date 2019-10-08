@@ -1,0 +1,21 @@
+server:
+  port: 8888
+  tomcat:
+      uri-encoding: utf-8
+thymeleaf:
+    # 配置thymeleaf修改页面不重启生效
+  cache: false
+  encoding: utf-8
+  mode: LEGACYHTML5
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+  mapper-locations: classpath*:mapper/*Mapper.xml
+  type-aliases-package: com.example.demo.bean
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/demo?useUnicode=true&charseterEncoding=utf8
+    username: root
+    password: root
