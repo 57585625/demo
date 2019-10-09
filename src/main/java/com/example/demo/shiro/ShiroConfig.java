@@ -1,5 +1,6 @@
 package com.example.demo.shiro;
 
+import com.example.demo.filter.LoginFilter;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.session.SessionListener;
 import org.apache.shiro.session.mgt.SessionManager;
@@ -14,10 +15,10 @@ import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import javax.servlet.Filter;
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
 
 @Configuration
 public class ShiroConfig {
@@ -41,6 +42,10 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/", "anon");
 
         filterChainDefinitionMap.put("/**", "authc");
+        Map<String,Filter> filters = new HashMap<String,Filter>();
+        Filter filter = new LoginFilter();
+        filters.put("authc",filter);
+        shiroFilterFactoryBean.setFilters(filters);
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         return shiroFilterFactoryBean;
     }
@@ -137,4 +142,14 @@ public class ShiroConfig {
         enterpriseCacheSessionDAO.setSessionIdGenerator(sessionIdGenerator());
         return enterpriseCacheSessionDAO;
     }
+
+    /**
+     * 判断是否是ajax请求
+     * @param request
+     * @return
+     */
+    public static boolean isAjax(ServletRequest request){
+        return "XMLHttpRequest".equalsIgnoreCase(((HttpServletRequest)request).getHeader("X-Requested-With"));
+    }
+
 }
